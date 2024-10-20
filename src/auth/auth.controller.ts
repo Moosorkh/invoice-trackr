@@ -1,15 +1,16 @@
 import { Controller, Post, Body } from "@nestjs/common";
+import { AuthService } from "./auth.service";
 
 @Controller("auth")
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
   @Post("login")
-  login(@Body() body) {
+ async login(@Body() body: { email: string; password: string }) {
     const { email, password } = body;
-    if (
-      email === "your_test_email@example.com" &&
-      password === "your_test_password"
-    ) {
-      return { access_token: "dummy-jwt-token" };
+    const user = await this.authService.validateUser(email, password);
+    if (user) {
+      return this.authService.login(user);
     } else {
       return { error: "Invalid credentials" };
     }

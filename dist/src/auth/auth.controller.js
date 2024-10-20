@@ -14,12 +14,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const auth_service_1 = require("./auth.service");
 let AuthController = class AuthController {
-    login(body) {
+    constructor(authService) {
+        this.authService = authService;
+    }
+    async login(body) {
         const { email, password } = body;
-        if (email === "your_test_email@example.com" &&
-            password === "your_test_password") {
-            return { access_token: "dummy-jwt-token" };
+        const user = await this.authService.validateUser(email, password);
+        if (user) {
+            return this.authService.login(user);
         }
         else {
             return { error: "Invalid credentials" };
@@ -32,9 +36,10 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 exports.AuthController = AuthController = __decorate([
-    (0, common_1.Controller)("auth")
+    (0, common_1.Controller)("auth"),
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

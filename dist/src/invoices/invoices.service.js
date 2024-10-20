@@ -15,14 +15,24 @@ const prisma_service_1 = require("../../prisma/prisma.service");
 let InvoicesService = class InvoicesService {
     constructor(prisma) {
         this.prisma = prisma;
-        this.invoices = [];
     }
     getAllInvoices() {
         return this.prisma.invoice.findMany();
     }
+    async getTotalByDueDate() {
+        try {
+            return this.prisma.invoice.aggregate({
+                _sum: { amount: true },
+            });
+        }
+        catch (error) {
+            console.error(error);
+            throw new Error('Error retrieving totals by due date');
+        }
+    }
     async getInvoiceById(id) {
         return this.prisma.invoice.findUnique({
-            where: { id },
+            where: { id: Number(id) },
         });
     }
     async createInvoice(invoiceData) {
@@ -39,8 +49,13 @@ let InvoicesService = class InvoicesService {
     }
     async update(id, updateInvoiceDto) {
         return this.prisma.invoice.update({
-            where: { id },
+            where: { id: Number(id) },
             data: updateInvoiceDto,
+        });
+    }
+    async delete(id) {
+        return this.prisma.invoice.delete({
+            where: { id: Number(id) },
         });
     }
 };

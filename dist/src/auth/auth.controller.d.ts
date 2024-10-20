@@ -1,9 +1,13 @@
+import { AuthService } from "./auth.service";
 export declare class AuthController {
-    login(body: any): {
+    private authService;
+    constructor(authService: AuthService);
+    login(body: {
+        email: string;
+        password: string;
+    }): Promise<{
         access_token: string;
-        error?: undefined;
     } | {
         error: string;
-        access_token?: undefined;
-    };
+    }>;
 }

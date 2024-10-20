@@ -1,38 +1,53 @@
 import { InvoicesService } from './invoices.service';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoicesController {
     private readonly invoicesService;
     constructor(invoicesService: InvoicesService);
     getAllInvoices(): import(".prisma/client").Prisma.PrismaPromise<{
-        id: number;
         description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
         paid: boolean;
         user_id: number | null;
     }[]>;
-    createInvoice(invoiceData: any): Promise<{
-        id: number;
+    createInvoice(invoiceData: CreateInvoiceDto): Promise<{
         description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
         paid: boolean;
         user_id: number | null;
     }>;
-    updateInvoice(id: number, updateInvoiceDto: UpdateInvoiceDto): Promise<{
-        id: number;
+    updateInvoice(id: string, updateInvoiceDto: UpdateInvoiceDto): Promise<{
         description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
         paid: boolean;
         user_id: number | null;
     }>;
+    getTotalInvoices(): Promise<import(".prisma/client").Prisma.GetInvoiceAggregateType<{
+        _sum: {
+            amount: true;
+        };
+    }>>;
     getInvoiceById(id: string): Promise<{
-        id: number;
         description: string;
+        id: number;
+        vendor_name: string;
+        amount: number;
+        due_date: Date;
+        paid: boolean;
+        user_id: number | null;
+    }>;
+    deleteInvoice(id: string): Promise<{
+        description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;

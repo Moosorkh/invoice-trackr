@@ -4,19 +4,23 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoicesService {
     private prisma;
     constructor(prisma: PrismaService);
-    private invoices;
     getAllInvoices(): import(".prisma/client").Prisma.PrismaPromise<{
-        id: number;
         description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
         paid: boolean;
         user_id: number | null;
     }[]>;
+    getTotalByDueDate(): Promise<import(".prisma/client").Prisma.GetInvoiceAggregateType<{
+        _sum: {
+            amount: true;
+        };
+    }>>;
     getInvoiceById(id: number): Promise<{
-        id: number;
         description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
@@ -24,8 +28,8 @@ export declare class InvoicesService {
         user_id: number | null;
     }>;
     createInvoice(invoiceData: CreateInvoiceDto): Promise<{
-        id: number;
         description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
@@ -33,8 +37,17 @@ export declare class InvoicesService {
         user_id: number | null;
     }>;
     update(id: number, updateInvoiceDto: UpdateInvoiceDto): Promise<{
-        id: number;
         description: string;
+        id: number;
+        vendor_name: string;
+        amount: number;
+        due_date: Date;
+        paid: boolean;
+        user_id: number | null;
+    }>;
+    delete(id: number): Promise<{
+        description: string;
+        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
