@@ -4,7 +4,7 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoicesService {
     private prisma;
     constructor(prisma: PrismaService);
-    getAllInvoices(): import(".prisma/client").Prisma.PrismaPromise<{
+    getAllInvoices(page: number, limit: number): import(".prisma/client").Prisma.PrismaPromise<{
         description: string;
         id: number;
         vendor_name: string;
@@ -13,6 +13,7 @@ export declare class InvoicesService {
         paid: boolean;
         user_id: number | null;
     }[]>;
+    getTotalInvoicesCount(): Promise<number>;
     getTotalByDueDate(): Promise<import(".prisma/client").Prisma.GetInvoiceAggregateType<{
         _sum: {
             amount: true;

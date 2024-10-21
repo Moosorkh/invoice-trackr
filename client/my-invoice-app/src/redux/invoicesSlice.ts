@@ -1,36 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from '../api/invoiceApi';
 
-interface Invoice {
-  id: number;
-  vendor_name: string;
-  amount: number;
-  due_date: string;
-  description: string;
-  paid: boolean;
-  user_id: number | null;
-}
+// Fetch invoices from backend
+export const fetchInvoices = createAsyncThunk(
+  'invoices/fetchInvoices',
+  async () => {
+    const response = await axios.get('/invoices');
+    return response.data;
+  },
+);
 
-interface InvoicesState {
-  invoices: Invoice[];
-  loading: boolean;
-  error: string | null;
-}
-
-const initialState: InvoicesState = {
+const initialState: { invoices: any[]; loading: boolean; error: string | null } = {
   invoices: [],
   loading: false,
   error: null,
 };
-
-// Fetch invoices from the backend
-export const fetchInvoices = createAsyncThunk(
-  'invoices/fetchInvoices',
-  async () => {
-    const response = await axios.get('http://localhost:3000/invoices');
-    return response.data;
-  },
-);
 
 const invoicesSlice = createSlice({
   name: 'invoices',
@@ -47,7 +31,7 @@ const invoicesSlice = createSlice({
       })
       .addCase(fetchInvoices.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch invoices';
+        state.error = action.error.message ?? null;
       });
   },
 });

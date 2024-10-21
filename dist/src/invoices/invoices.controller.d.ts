@@ -4,7 +4,7 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoicesController {
     private readonly invoicesService;
     constructor(invoicesService: InvoicesService);
-    getAllInvoices(): import(".prisma/client").Prisma.PrismaPromise<{
+    getAllInvoices(page?: string, limit?: string): import(".prisma/client").Prisma.PrismaPromise<{
         description: string;
         id: number;
         vendor_name: string;
@@ -13,6 +13,7 @@ export declare class InvoicesController {
         paid: boolean;
         user_id: number | null;
     }[]>;
+    getTotalInvoicesCount(): Promise<number>;
     createInvoice(invoiceData: CreateInvoiceDto): Promise<{
         description: string;
         id: number;

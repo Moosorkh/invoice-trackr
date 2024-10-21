@@ -5,12 +5,17 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import AppRoutes from './routes';
 import './index.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root')!); // Create root correctly
 root.render(
   <StrictMode>
-    <Provider store={store}>
-      <AppRoutes />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <AppRoutes />
+      </Provider>
+    </QueryClientProvider>
   </StrictMode>,
 );

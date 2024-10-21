@@ -22,8 +22,13 @@ let InvoicesController = class InvoicesController {
     constructor(invoicesService) {
         this.invoicesService = invoicesService;
     }
-    getAllInvoices() {
-        return this.invoicesService.getAllInvoices();
+    getAllInvoices(page = '1', limit = '10') {
+        const pageNumber = parseInt(page, 10);
+        const limitNumber = parseInt(limit, 10);
+        return this.invoicesService.getAllInvoices(pageNumber, limitNumber);
+    }
+    async getTotalInvoicesCount() {
+        return this.invoicesService.getTotalInvoicesCount();
     }
     createInvoice(invoiceData) {
         return this.invoicesService.createInvoice(invoiceData);
@@ -48,10 +53,19 @@ exports.InvoicesController = InvoicesController;
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], InvoicesController.prototype, "getAllInvoices", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('total-count'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], InvoicesController.prototype, "getTotalInvoicesCount", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
