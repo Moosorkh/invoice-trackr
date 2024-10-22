@@ -1,11 +1,30 @@
-version: '3'
+version: '3.8'
+
 services:
   postgres:
-    image: postgres
+    image: postgres:13
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1363
-      POSTGRES_DB: invoicetracker
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: invoicedb
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    command: npm run start:dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/invoicedb
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

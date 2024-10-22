@@ -37,8 +37,13 @@ let InvoicesController = class InvoicesController {
         return this.invoicesService.getTotalByDueDate();
     }
     async getInvoiceById(id) {
-        const invoiceId = parseInt(id, 10);
-        return this.invoicesService.getInvoiceById(invoiceId);
+        try {
+            const invoiceId = parseInt(id, 10);
+            return await this.invoicesService.getInvoiceById(invoiceId);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Invalid invoice ID or invoice not found');
+        }
     }
 };
 exports.InvoicesController = InvoicesController;

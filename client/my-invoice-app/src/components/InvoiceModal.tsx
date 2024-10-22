@@ -1,46 +1,39 @@
 import React from 'react';
-import { Modal, Button } from 'antd'; // Assuming you are using Ant Design
+import { Modal, Button } from 'antd';
 
 interface InvoiceModalProps {
   visible: boolean;
   onClose: () => void;
-  invoice: any; // Define a more specific type if possible
+  invoice: any;
+  isTotalView?: boolean; // Optional prop to determine the view mode
 }
 
 const InvoiceModal: React.FC<InvoiceModalProps> = ({
   visible,
   onClose,
   invoice,
+  isTotalView = false,
 }) => {
   return (
     <Modal
-      title={`Invoice from ${invoice?.vendor_name || 'N/A'}`}
+      title={`Invoice from ${invoice.vendor_name}`}
       open={visible}
       onCancel={onClose}
-      footer={[
+      footer={
         <Button key="close" onClick={onClose}>
           Close
-        </Button>,
-      ]}
+        </Button>
+      }
     >
-      <p>
-        <strong>Vendor:</strong> {invoice?.vendor_name || 'N/A'}
-      </p>
-      <p>
-        <strong>Amount:</strong> ${invoice?.amount || 'N/A'}
-      </p>
-      <p>
-        <strong>Due Date:</strong>{' '}
-        {invoice?.due_date
-          ? new Date(invoice.due_date).toLocaleDateString()
-          : 'N/A'}
-      </p>
-      <p>
-        <strong>Description:</strong> {invoice?.description || 'No Description'}
-      </p>
-      <p>
-        <strong>Status:</strong> {invoice?.paid ? 'Paid' : 'Unpaid'}
-      </p>
+      <p>Vendor: {invoice.vendor_name}</p>
+      <p>Amount: ${invoice.amount}</p>
+      {!isTotalView && (
+        <>
+          <p>Due Date: {invoice.due_date || 'N/A'}</p>
+          <p>Description: {invoice.description || 'No Description'}</p>
+          <p>Status: {invoice.paid ? 'Paid' : 'Unpaid'}</p>
+        </>
+      )}
     </Modal>
   );
 };

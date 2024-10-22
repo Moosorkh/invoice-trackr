@@ -7,7 +7,6 @@ const api = axios.create({
 // Interceptor to add token to every request
 api.interceptors.request.use(
   (config) => {
-    //check if expired
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -26,6 +25,17 @@ export const fetchInvoices = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching invoices:', error);
+    throw error;
+  }
+};
+
+// Function to fetch total invoices amount
+export const fetchInvoiceTotal = async () => {
+  try {
+    const response = await api.get('/invoices/total');
+    return response.data._sum.amount; // Adjust this based on the response structure
+  } catch (error) {
+    console.error('Error fetching total invoices:', error);
     throw error;
   }
 };

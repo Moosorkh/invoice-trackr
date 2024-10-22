@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
-import { fetchInvoices } from '../redux/invoicesSlice';
+import { fetchInvoicesThunk, fetchInvoiceTotalThunk } from '../redux/invoicesSlice';
 import InvoiceModal from './InvoiceModal';
 
 const InvoiceList: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { invoices, loading, error } = useSelector(
+  const { invoices, loading, error, totalAmount } = useSelector(
     (state: RootState) => state.invoices,
   );
 
   // State to manage modal visibility and selected invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
+  const [showTotal, setShowTotal] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchInvoices());
+    dispatch(fetchInvoicesThunk());
   }, [dispatch]);
 
   // Function to handle invoice click
@@ -28,6 +29,14 @@ const InvoiceList: React.FC = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedInvoice(null);
+    setShowTotal(false);
+  };
+
+  // Function to view total amount
+  const handleViewTotalClick = async () => {
+    await dispatch(fetchInvoiceTotalThunk());
+    setShowTotal(true);
+    setIsModalOpen(true);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -37,19 +46,25 @@ const InvoiceList: React.FC = () => {
     <div>
       <h2>Invoices</h2>
       <ul>
-        {invoices.map((invoice: { id: string; vendor_name: string; amount: number; due_date: string }) => (
+        {invoices.map((invoice) => (
           <li key={invoice.id} onClick={() => handleInvoiceClick(invoice)}>
             {invoice.vendor_name} - ${invoice.amount} - {invoice.due_date}
           </li>
         ))}
       </ul>
 
+      <button onClick={handleViewTotalClick}>View Invoice Total</button>
+
       {/* Modal Component */}
-      {selectedInvoice && (
+      {isModalOpen && (
         <InvoiceModal
           visible={isModalOpen}
           onClose={handleModalClose}
-          invoice={selectedInvoice}
+          invoice={
+            showTotal
+              ? { vendor_name: 'Total', amount: totalAmount, due_date: '' }
+              : selectedInvoice
+          }
         />
       )}
     </div>
