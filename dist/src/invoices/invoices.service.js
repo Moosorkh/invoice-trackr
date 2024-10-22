@@ -16,16 +16,13 @@ let InvoicesService = class InvoicesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    getAllInvoices(page, limit) {
+    async getAllInvoices(page, limit) {
         const offset = (page - 1) * limit;
         return this.prisma.invoice.findMany({
             skip: offset,
             take: limit,
             orderBy: { due_date: 'asc' },
         });
-    }
-    async getTotalInvoicesCount() {
-        return this.prisma.invoice.count();
     }
     async getTotalByDueDate() {
         try {
@@ -53,17 +50,6 @@ let InvoicesService = class InvoicesService {
                 paid: invoiceData.paid,
                 user_id: null,
             },
-        });
-    }
-    async update(id, updateInvoiceDto) {
-        return this.prisma.invoice.update({
-            where: { id: Number(id) },
-            data: updateInvoiceDto,
-        });
-    }
-    async delete(id) {
-        return this.prisma.invoice.delete({
-            where: { id: Number(id) },
         });
     }
 };

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -13,6 +13,7 @@ const Login = () => {
         email,
         password,
       });
+
       // Save the token in localStorage after a successful login
       localStorage.setItem('token', response.data.access_token);
 

@@ -1,13 +1,7 @@
-import { AuthService } from "./auth.service";
+import { AuthService } from './auth.service';
+import { LoginDto } from '..//invoices/dto/login.dto';
 export declare class AuthController {
-    private authService;
+    private readonly authService;
     constructor(authService: AuthService);
-    login(body: {
-        email: string;
-        password: string;
-    }): Promise<{
-        access_token: string;
-    } | {
-        error: string;
-    }>;
+    login(body: LoginDto): Promise<any>;
 }

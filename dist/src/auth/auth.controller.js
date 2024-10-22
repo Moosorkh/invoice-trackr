@@ -15,31 +15,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const login_dto_1 = require("..//invoices/dto/login.dto");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     async login(body) {
-        const { email, password } = body;
-        const user = await this.authService.validateUser(email, password);
-        if (user) {
-            return this.authService.login(user);
+        const result = login_dto_1.LoginSchema.safeParse(body);
+        if (!result.success) {
+            throw new common_1.BadRequestException(result.error.errors);
         }
-        else {
-            return { error: "Invalid credentials" };
+        try {
+            return this.authService.login(result.data);
+        }
+        catch (error) {
+            if (error instanceof common_1.UnauthorizedException) {
+                throw new common_1.UnauthorizedException(error.message);
+            }
+            throw new common_1.BadRequestException('Something went wrong during login.');
         }
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)("login"),
+    (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 exports.AuthController = AuthController = __decorate([
-    (0, common_1.Controller)("auth"),
+    (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

@@ -19,21 +19,25 @@ let AuthService = class AuthService {
         this.prisma = prisma;
         this.jwtService = jwtService;
     }
-    async validateUser(email, password) {
-        const user = await this.prisma.user.findUnique({
-            where: { email },
-        });
-        if (user && (await bcrypt.compare(password, user.password))) {
-            const { password, ...result } = user;
-            return result;
+    async validateUser(loginDto) {
+        const { email, password } = loginDto;
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: { email },
+            });
+            if (!user || !(await bcrypt.compare(password, user.password))) {
+                throw new common_1.UnauthorizedException('Invalid credentials');
+            }
+            const payload = { sub: user.id, email: user.email };
+            return { access_token: this.jwtService.sign(payload) };
         }
-        return null;
+        catch (error) {
+            throw new common_1.UnauthorizedException('Login failed, please check your credentials and try again.');
+        }
     }
-    async login(user) {
-        const payload = { username: user.email, sub: user.id };
-        return {
-            access_token: this.jwtService.sign(payload),
-        };
+    async login(data) {
+        const validatedUser = await this.validateUser(data);
+        return { message: 'Login successful', ...validatedUser };
     }
 };
 exports.AuthService = AuthService;

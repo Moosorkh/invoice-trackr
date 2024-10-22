@@ -1,31 +1,20 @@
 import { InvoicesService } from './invoices.service';
-import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoicesController {
     private readonly invoicesService;
     constructor(invoicesService: InvoicesService);
-    getAllInvoices(page?: string, limit?: string): import(".prisma/client").Prisma.PrismaPromise<{
-        description: string;
+    getAllInvoices(page?: string, limit?: string): Promise<{
         id: number;
+        description: string;
         vendor_name: string;
         amount: number;
         due_date: Date;
         paid: boolean;
         user_id: number | null;
     }[]>;
-    getTotalInvoicesCount(): Promise<number>;
     createInvoice(invoiceData: CreateInvoiceDto): Promise<{
-        description: string;
         id: number;
-        vendor_name: string;
-        amount: number;
-        due_date: Date;
-        paid: boolean;
-        user_id: number | null;
-    }>;
-    updateInvoice(id: string, updateInvoiceDto: UpdateInvoiceDto): Promise<{
         description: string;
-        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;
@@ -38,17 +27,8 @@ export declare class InvoicesController {
         };
     }>>;
     getInvoiceById(id: string): Promise<{
-        description: string;
         id: number;
-        vendor_name: string;
-        amount: number;
-        due_date: Date;
-        paid: boolean;
-        user_id: number | null;
-    }>;
-    deleteInvoice(id: string): Promise<{
         description: string;
-        id: number;
         vendor_name: string;
         amount: number;
         due_date: Date;

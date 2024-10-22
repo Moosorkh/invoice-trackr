@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 
 @Injectable()
 export class InvoicesService {
   constructor(private prisma: PrismaService) {}
 
-  getAllInvoices(page: number, limit: number) {
+  // Example of getting all invoices with pagination
+  async getAllInvoices(page: number, limit: number) {
     const offset = (page - 1) * limit;
     return this.prisma.invoice.findMany({
       skip: offset,
@@ -16,9 +16,6 @@ export class InvoicesService {
     });
   }
 
-  async getTotalInvoicesCount() {
-    return this.prisma.invoice.count();
-  }
 
   async getTotalByDueDate() {
     try {
@@ -46,18 +43,6 @@ export class InvoicesService {
         paid: invoiceData.paid,
         user_id: null,
       },
-    });
-  }
-  async update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    return this.prisma.invoice.update({
-      where: { id: Number(id) },
-      data: updateInvoiceDto,
-    });
-  }
-
-  async delete(id: number) {
-    return this.prisma.invoice.delete({
-      where: { id: Number(id) },
     });
   }
 }

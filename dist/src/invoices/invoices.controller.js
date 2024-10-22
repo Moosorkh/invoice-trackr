@@ -16,7 +16,6 @@ exports.InvoicesController = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const invoices_service_1 = require("./invoices.service");
-const update_invoice_dto_1 = require("./dto/update-invoice.dto");
 const create_invoice_dto_1 = require("./dto/create-invoice.dto");
 let InvoicesController = class InvoicesController {
     constructor(invoicesService) {
@@ -27,15 +26,12 @@ let InvoicesController = class InvoicesController {
         const limitNumber = parseInt(limit, 10);
         return this.invoicesService.getAllInvoices(pageNumber, limitNumber);
     }
-    async getTotalInvoicesCount() {
-        return this.invoicesService.getTotalInvoicesCount();
-    }
     createInvoice(invoiceData) {
+        const parseResult = create_invoice_dto_1.CreateInvoiceSchema.safeParse(invoiceData);
+        if (!parseResult.success) {
+            throw new common_1.BadRequestException(parseResult.error.errors);
+        }
         return this.invoicesService.createInvoice(invoiceData);
-    }
-    async updateInvoice(id, updateInvoiceDto) {
-        const invoiceId = parseInt(id, 10);
-        return this.invoicesService.update(invoiceId, updateInvoiceDto);
     }
     async getTotalInvoices() {
         return this.invoicesService.getTotalByDueDate();
@@ -44,14 +40,9 @@ let InvoicesController = class InvoicesController {
         const invoiceId = parseInt(id, 10);
         return this.invoicesService.getInvoiceById(invoiceId);
     }
-    async deleteInvoice(id) {
-        const invoiceId = parseInt(id, 10);
-        return this.invoicesService.delete(invoiceId);
-    }
 };
 exports.InvoicesController = InvoicesController;
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('limit')),
@@ -60,53 +51,27 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], InvoicesController.prototype, "getAllInvoices", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('total-count'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], InvoicesController.prototype, "getTotalInvoicesCount", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_invoice_dto_1.CreateInvoiceDto]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], InvoicesController.prototype, "createInvoice", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Put)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_invoice_dto_1.UpdateInvoiceDto]),
-    __metadata("design:returntype", Promise)
-], InvoicesController.prototype, "updateInvoice", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('total'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], InvoicesController.prototype, "getTotalInvoices", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], InvoicesController.prototype, "getInvoiceById", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], InvoicesController.prototype, "deleteInvoice", null);
 exports.InvoicesController = InvoicesController = __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('invoices'),
     __metadata("design:paramtypes", [invoices_service_1.InvoicesService])
 ], InvoicesController);
