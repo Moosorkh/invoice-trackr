@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './InvoiceModal.css';
+import { API_URL } from '../config';
 
 interface InvoiceModalProps {
   visible: boolean;
@@ -51,8 +52,8 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
   const handleSave = async () => {
     const token = localStorage.getItem('token');
     const url = isCreateMode
-      ? 'http://localhost:3000/invoices'
-      : `http://localhost:3000/invoices/${invoice.id}`;
+      ? `${API_URL}/invoices`
+      : `${API_URL}/invoices/${invoice.id}`;
 
     const method = isCreateMode ? 'POST' : 'PUT';
 
@@ -93,7 +94,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(
-        `http://localhost:3000/invoices/${invoice.id}`,
+        `${API_URL}/invoices/${invoice.id}`,
         {
           method: 'DELETE',
           headers: {
@@ -118,7 +119,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(
-        `http://localhost:3000/invoices/${invoice.id}/toggle-paid`,
+        `${API_URL}/invoices/${invoice.id}/toggle-paid`,
         {
           method: 'PUT',
           headers: {
