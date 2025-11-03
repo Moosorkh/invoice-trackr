@@ -3,12 +3,12 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto';
 export declare class InvoicesService {
     private prisma;
     constructor(prisma: PrismaService);
-    getAllInvoices(page: number, limit: number): Promise<{
+    getAllInvoices(page: number, limit: number, paid?: boolean, search?: string): Promise<{
         id: number;
-        description: string;
         vendor_name: string;
         amount: number;
         due_date: Date;
+        description: string;
         paid: boolean;
         user_id: number | null;
     }[]>;
@@ -19,19 +19,46 @@ export declare class InvoicesService {
     }>>;
     getInvoiceById(id: number): Promise<{
         id: number;
-        description: string;
         vendor_name: string;
         amount: number;
         due_date: Date;
+        description: string;
         paid: boolean;
         user_id: number | null;
     }>;
     createInvoice(invoiceData: CreateInvoiceDto): Promise<{
         id: number;
-        description: string;
         vendor_name: string;
         amount: number;
         due_date: Date;
+        description: string;
+        paid: boolean;
+        user_id: number | null;
+    }>;
+    updateInvoice(id: number, invoiceData: CreateInvoiceDto): Promise<{
+        id: number;
+        vendor_name: string;
+        amount: number;
+        due_date: Date;
+        description: string;
+        paid: boolean;
+        user_id: number | null;
+    }>;
+    deleteInvoice(id: number): Promise<{
+        id: number;
+        vendor_name: string;
+        amount: number;
+        due_date: Date;
+        description: string;
+        paid: boolean;
+        user_id: number | null;
+    }>;
+    togglePaidStatus(id: number): Promise<{
+        id: number;
+        vendor_name: string;
+        amount: number;
+        due_date: Date;
+        description: string;
         paid: boolean;
         user_id: number | null;
     }>;

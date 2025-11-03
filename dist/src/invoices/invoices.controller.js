@@ -21,10 +21,11 @@ let InvoicesController = class InvoicesController {
     constructor(invoicesService) {
         this.invoicesService = invoicesService;
     }
-    getAllInvoices(page = '1', limit = '10') {
+    getAllInvoices(page = '1', limit = '10', paid, search) {
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
-        return this.invoicesService.getAllInvoices(pageNumber, limitNumber);
+        const paidFilter = paid === 'true' ? true : paid === 'false' ? false : undefined;
+        return this.invoicesService.getAllInvoices(pageNumber, limitNumber, paidFilter, search);
     }
     createInvoice(invoiceData) {
         const parseResult = create_invoice_dto_1.CreateInvoiceSchema.safeParse(invoiceData);
@@ -45,14 +46,32 @@ let InvoicesController = class InvoicesController {
             throw new common_1.BadRequestException('Invalid invoice ID or invoice not found');
         }
     }
+    async updateInvoice(id, invoiceData) {
+        const parseResult = create_invoice_dto_1.CreateInvoiceSchema.safeParse(invoiceData);
+        if (!parseResult.success) {
+            throw new common_1.BadRequestException(parseResult.error.errors);
+        }
+        const invoiceId = parseInt(id, 10);
+        return this.invoicesService.updateInvoice(invoiceId, invoiceData);
+    }
+    async deleteInvoice(id) {
+        const invoiceId = parseInt(id, 10);
+        return this.invoicesService.deleteInvoice(invoiceId);
+    }
+    async togglePaidStatus(id) {
+        const invoiceId = parseInt(id, 10);
+        return this.invoicesService.togglePaidStatus(invoiceId);
+    }
 };
 exports.InvoicesController = InvoicesController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('limit')),
+    __param(2, (0, common_1.Query)('paid')),
+    __param(3, (0, common_1.Query)('search')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, String, String]),
     __metadata("design:returntype", void 0)
 ], InvoicesController.prototype, "getAllInvoices", null);
 __decorate([
@@ -75,6 +94,28 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], InvoicesController.prototype, "getInvoiceById", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], InvoicesController.prototype, "updateInvoice", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], InvoicesController.prototype, "deleteInvoice", null);
+__decorate([
+    (0, common_1.Put)(':id/toggle-paid'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], InvoicesController.prototype, "togglePaidStatus", null);
 exports.InvoicesController = InvoicesController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('invoices'),

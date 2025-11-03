@@ -9,8 +9,9 @@ const Main_blank: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
       <h1>Welcome to Invoice Tracker</h1>
+      <p>Manage your invoices efficiently and effectively.</p>
       <button onClick={handleInvoicesClick}>Go to Invoices</button>
     </div>
   );

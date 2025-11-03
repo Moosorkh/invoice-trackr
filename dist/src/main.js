@@ -7,7 +7,7 @@ const dotenv_1 = require("dotenv");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: 'http://localhost:5173',
+        origin: 'http://localhost:3001',
         credentials: true,
     });
     await app.listen(3000);

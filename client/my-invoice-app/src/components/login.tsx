@@ -22,7 +22,7 @@ const Login: React.FC = () => {
       setError(null);
 
       // Redirect to the main blank page
-      navigate('/main');
+      navigate('/');
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
         setError('Invalid email or password. Please try again.');

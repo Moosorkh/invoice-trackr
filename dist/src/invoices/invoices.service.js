@@ -16,9 +16,19 @@ let InvoicesService = class InvoicesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async getAllInvoices(page, limit) {
+    async getAllInvoices(page, limit, paid, search) {
         const offset = (page - 1) * limit;
+        const where = {};
+        if (paid !== undefined) {
+            where.paid = paid;
+        }
+        if (search) {
+            where.vendor_name = {
+                contains: search,
+            };
+        }
         return this.prisma.invoice.findMany({
+            where,
             skip: offset,
             take: limit,
             orderBy: { due_date: 'asc' },
@@ -50,6 +60,32 @@ let InvoicesService = class InvoicesService {
                 paid: invoiceData.paid,
                 user_id: null,
             },
+        });
+    }
+    async updateInvoice(id, invoiceData) {
+        return this.prisma.invoice.update({
+            where: { id },
+            data: {
+                vendor_name: invoiceData.vendor_name,
+                amount: invoiceData.amount,
+                due_date: invoiceData.due_date,
+                description: invoiceData.description,
+                paid: invoiceData.paid,
+            },
+        });
+    }
+    async deleteInvoice(id) {
+        return this.prisma.invoice.delete({
+            where: { id },
+        });
+    }
+    async togglePaidStatus(id) {
+        const invoice = await this.prisma.invoice.findUnique({
+            where: { id },
+        });
+        return this.prisma.invoice.update({
+            where: { id },
+            data: { paid: !invoice.paid },
         });
     }
 };

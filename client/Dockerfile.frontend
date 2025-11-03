@@ -1,0 +1,23 @@
+# Frontend Dockerfile
+FROM node:18-buster
+
+# Set working directory
+WORKDIR /app
+
+# Copy the package.json and package-lock.json from "my-invoice-app" to install dependencies
+COPY ./my-invoice-app/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Install missing package explicitly (for now)
+RUN npm install @tanstack/react-query
+
+# Copy the entire application code from "my-invoice-app"
+COPY ./my-invoice-app /app
+
+# Expose the frontend port (updated to 3001)
+EXPOSE 3001
+
+# Start the application (simplified CMD)
+CMD ["npm", "run", "dev"]
